@@ -4,18 +4,18 @@ BOS,22,NBA Finals
 SAS,16,Possible WCF
 DEN,16,Possible WCF
 NYK,16,Possible ECF
-DET,14,Possible ECF
-CLE,11,R2
-HOU,10,R2 if upset LAL
-MIN,6,R1
-LAL,5,R1 (without Luka)
-TOR,5,R1
-ATL,5,R1
+DET,15,Possible ECF
+CLE,11,?
+MIN,10,R1 win if against Lakers
 PHO,6,Play-in win + R1
-LAC,5,Play-in + R1
-ORL,6,Play-in win + R1
-PHI,5,Play-in + R1
-CHO,1,Play-in exit
+LAC,6,Play-in + R1
+HOU,5,R1 loss if against Nuggets
+LAL,5,R1 loss to Timbewolves
+ATL,5,?
+TOR,5,?
+ORL,6,?
+CHO,1,?
+PHI,5,?
 MIA,1,Play-in exit
 POR,1,Play-in exit
 GSW,1,Play-in exit
