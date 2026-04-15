@@ -36,7 +36,7 @@ function todayPlusNDays(n: number) {
 
 // Do requests to the BallDontLie API to get games between yesterday and tomorrow
 async function getGames(): Promise<Game[]> {
-  const startOfPlayoffs = new Date('2026-04-19')
+  const startOfPlayoffs = new Date('2026-04-14')
 
   const yesterday = todayPlusNDays(-1)
   const tomorrow = todayPlusNDays(1)
@@ -49,7 +49,9 @@ async function getGames(): Promise<Game[]> {
 
   const gamesURL = `${apiBaseURL}/games?start_date=${startStr}&end_date=${endStr}&per_page=100`
   const resp = await apiRequest(gamesURL)
-  const { data, meta } = await resp.json()
+  const json = await resp.json()
+  if (!json.data || !json.meta) return []
+  const { data, meta } = json
 
   const allData = data
   let nextCursor = meta.next_cursor
@@ -120,10 +122,14 @@ async function insertTeamsAndGames(games: Game[]) {
 }
 
 async function getPlayerStats(games: Game[]): Promise<PlayerStat[]> {
+  if (games.length === 0) return []
+
   const gameIds = games.map((game) => game.id).join('&game_ids[]=')
   const playerStatsURL = `${apiBaseURL}/stats?game_ids[]=${gameIds}&per_page=100`
   const resp = await apiRequest(playerStatsURL)
-  const { data, meta } = await resp.json()
+  const json = await resp.json()
+  if (!json.data || !json.meta) return []
+  const { data, meta } = json
 
   const allData = data
   let nextCursor = meta.next_cursor
