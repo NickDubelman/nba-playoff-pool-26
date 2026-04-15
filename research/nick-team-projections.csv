@@ -1,21 +1,21 @@
-team_code,projected_games,notes
-OKC,20,NBA Finals
-BOS,22,NBA Finals
-SAS,16,Possible WCF
-DEN,16,Possible WCF
-NYK,16,Possible ECF
-DET,15,Possible ECF
-CLE,11,?
-MIN,10,R1 win if against Lakers
-PHO,6,Play-in win + R1
-LAC,6,Play-in + R1
-HOU,5,R1 loss if against Nuggets
-LAL,5,R1 loss to Timbewolves
-ATL,5,?
-TOR,5,?
-ORL,6,?
-CHO,1,?
-PHI,5,?
-MIA,1,Play-in exit
-POR,1,Play-in exit
-GSW,1,Play-in exit
+team_code,projected_games,range_min,range_max,notes
+OKC,21,15,24,NBA Finals
+BOS,24,12,26,NBA Finals
+DEN,20,7,26,Possible WCF
+CLE,19,12,20,Possible ECF
+SAS,12,10,23,Possible WCF
+NYK,12,10,23,Possible ECF
+DET,12,10,18,Possible ECF
+HOU,11,7,12,R1 win against Lakers
+MIN,7,5,14,R1 loss to Nuggets
+LAL,6,4,11,R1 loss to Rockets
+ATL,5,4,6,R1 loss
+TOR,5,4,6,R1 loss
+PHO,6,2,7,Play-in + R1
+LAC,6,2,7,Play-in + R1
+ORL,6,2,6,Play-in + R1
+CHO,7,1,5,Play-in + R1
+PHI,2,2,5,Play-in exit
+MIA,1,1,5,Play-in exit
+POR,1,1,5,Play-in exit
+GSW,1,1,5,Play-in exit

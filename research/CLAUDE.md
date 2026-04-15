@@ -14,3 +14,5 @@ The `./stats` directory contains CSVs from Basketball Reference with the regular
 
 You have access to the `duckdb` CLI which can load CSV and run SQL queries on them. You can use this
 to do analysis.
+
+The draft is a snake format with 12 total participants and I have the 11th pick.
