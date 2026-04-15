@@ -110,14 +110,16 @@
 </div>
 
 <table class="min-w-full divide-y divide-gray-300 text-sm">
-  <tr class="font-semibold divide-x">
-    <th class="py-2 text-left">Player</th>
-    <th class="px-2 text-left">Picked by</th>
-    <th class="px-2 text-left">Points</th>
-    <th class="px-2 text-left">Drafted</th>
-    <th class="px-2 text-left">Rank</th>
-    <th class="px-2 text-left">Net</th>
-  </tr>
+  <thead>
+    <tr class="font-semibold divide-x">
+      <th class="py-2 text-left">Player</th>
+      <th class="px-2 text-left">Picked by</th>
+      <th class="px-2 text-left">Points</th>
+      <th class="px-2 text-left">Drafted</th>
+      <th class="px-2 text-left">Rank</th>
+      <th class="px-2 text-left">Net</th>
+    </tr>
+  </thead>
 
   <tbody class="divide-y divide-gray-200">
     {#each sortedPicksSlice as { player, points, active, pickedBy, drafted, rank, net }}
