@@ -1,1 +1,8 @@
 .DS_Store
+node_modules/
+.astro/
+
+# Local Netlify folder
+.netlify
+
+2025-reference-app/

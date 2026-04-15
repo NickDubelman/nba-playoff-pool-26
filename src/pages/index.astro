@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Leaderboard from '../components/Leaderboard.svelte'
+import TodaysTopPerformers from '../components/TodaysTopPerformers.svelte'
+import ScoringBreakdown from '../components/ScoringBreakdown/index.svelte'
+import TopScorersOverall from '../components/TopScorersOverall.svelte'
+import TeamBreakdown from '../components/TeamBreakdown.svelte'
+import DraftAnalysis from '../components/DraftAnalysis.svelte'
+import LastYearsPodium from '../components/LastYearsPodium.astro'
+import { getParticipants } from '../participants'
+import getParticipantScores from '../stats/participantScores'
+import getGameStats from '../stats/gameStats'
+
+const participants = await getParticipants()
+const participantScores = await getParticipantScores()
+const gameStats = await getGameStats()
+---
+
+<Layout title="Scoring Pool">
+  <p>
+    These stats should update every 10 minutes or so. You need to refresh your
+    page for the stats to update.
+  </p>
+
+  <Leaderboard participantScores={participantScores} />
+
+  <TodaysTopPerformers client:load gameStats={gameStats} />
+
+  <ScoringBreakdown
+    client:only="svelte"
+    participants={participants}
+    gameStats={gameStats}
+  />
+
+  <TopScorersOverall client:load gameStats={gameStats} />
+
+  <TeamBreakdown
+    client:load
+    participants={participants}
+    gameStats={gameStats}
+  />
+
+  <!-- FIXME: -->
+  <!-- <DraftAnalysis
+    client:load
+    participants={participants}
+    gameStats={gameStats}
+  /> -->
+
+  <LastYearsPodium />
+</Layout>

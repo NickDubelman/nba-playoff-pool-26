@@ -1,0 +1,2 @@
+[functions."scheduledPull"]
+schedule = "*/2 * * * *"

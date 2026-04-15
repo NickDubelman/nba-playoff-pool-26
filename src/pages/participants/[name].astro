@@ -1,0 +1,161 @@
+---
+import {
+  db,
+  eq,
+  sum,
+  count,
+  desc,
+  and,
+  ne,
+  Participant,
+  NBAPlayer,
+  NBAPlayerGameStats,
+  NBATeam,
+} from 'astro:db'
+import Layout from '../../layouts/Layout.astro'
+import getParticipantScores from '../../stats/participantScores'
+import { teamColors } from '../../utils'
+
+const { name } = Astro.params
+
+if (!name) {
+  return Astro.redirect('/404')
+}
+
+// Replace + with /
+const adjustedName = name.replace(/\+/g, '/')
+
+const participants = await db
+  .select()
+  .from(Participant)
+  .leftJoin(NBATeam, eq(NBATeam.id, Participant.favoriteTeamId))
+  .where(eq(Participant.name, adjustedName))
+
+if (participants.length === 0) {
+  return Astro.redirect('/404')
+}
+
+const participant = participants[0]
+
+const players = await db
+  .select()
+  .from(NBAPlayer)
+  .innerJoin(NBATeam, eq(NBATeam.id, NBAPlayer.teamId))
+  .groupBy(NBAPlayer.id)
+  .where(eq(NBAPlayer.participantId, participant.Participant.id))
+
+const playerStats = await db
+  .select({
+    name: NBAPlayer.name,
+    points: sum(NBAPlayerGameStats.points).mapWith(Number),
+    gamesPlayed: count(NBAPlayerGameStats.id),
+  })
+  .from(NBAPlayer)
+  .leftJoin(NBAPlayerGameStats, eq(NBAPlayerGameStats.playerId, NBAPlayer.id))
+  .groupBy(NBAPlayer.id)
+  .orderBy(desc(sum(NBAPlayerGameStats.points)))
+  .where(
+    and(
+      eq(NBAPlayer.participantId, participant.Participant.id),
+      ne(NBAPlayerGameStats.minutes, 0),
+    ),
+  )
+
+// Create a mapping from player name -> stats
+const playerStatsMap = playerStats.reduce<
+  Record<string, (typeof playerStats)[number]>
+>((acc, player) => {
+  acc[player.name] = player
+  return acc
+}, {})
+
+function getPlayerStats(playerName: string) {
+  return playerStatsMap[playerName]
+}
+
+function getPlayerPoints(playerName: string) {
+  return getPlayerStats(playerName)?.points || 0
+}
+
+function getPlayerGamesPlayed(playerName: string) {
+  return getPlayerStats(playerName)?.gamesPlayed || 0
+}
+
+function getPlayerPPG(playerName: string) {
+  const stats = getPlayerStats(playerName)
+  return stats ? Math.round((stats.points / stats.gamesPlayed) * 100) / 100 : 0
+}
+
+const participantScores = await getParticipantScores()
+const currentPosition =
+  participantScores
+    .sort((a, b) => (a.points > b.points ? -1 : 1))
+    .findIndex((s) => s.name === adjustedName) + 1
+
+const positionSuffix: Record<number, string> = {
+  1: 'st',
+  2: 'nd',
+  3: 'rd',
+}
+
+const favoriteTeamColor = teamColors[participant.NBATeam?.shortName || '']
+---
+
+<Layout title={`Scoring Pool - ${adjustedName}`}>
+  <h1 class="text-3xl font-bold py-2">{adjustedName}</h1>
+
+  <div class="py-2 pr-8 inline-block">
+    <dt class="text-sm font-medium leading-6 text-gray-500">Favorite Team</dt>
+    <dd
+      style={{ color: favoriteTeamColor }}
+      class="w-full flex-none text-3xl font-medium leading-10"
+    >
+      {participant.NBATeam?.shortName || '--'}
+    </dd>
+  </div>
+
+  <div class="py-2 inline-block">
+    <dt class="text-sm font-medium leading-6 text-gray-500">
+      Current Position
+    </dt>
+    <dd class="w-full flex-none text-3xl font-medium leading-10">
+      {currentPosition}{positionSuffix[currentPosition] || 'th'}
+    </dd>
+  </div>
+
+  <table class="min-w-full divide-y divide-gray-300 text-sm">
+    <thead>
+      <tr class="font-semibold divide-x">
+        <th class="py-2 text-left">Player</th>
+        <th class="px-2 text-left">Team</th>
+        <th class="px-2 text-left">Points</th>
+        <th class="px-2 text-left">Games Played</th>
+        <th class="px-2 text-left">PPG</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      {
+        players
+          .sort((a, b) => {
+            // Sort by points
+            return (
+              getPlayerPoints(b.NBAPlayer.name) -
+              getPlayerPoints(a.NBAPlayer.name)
+            )
+          })
+          .map((player) => (
+            <tr class="divide-x">
+              <td class="py-2">{player.NBAPlayer.name}</td>
+              <td class="px-2">{player.NBATeam.shortName}</td>
+              <td class="px-2">{getPlayerPoints(player.NBAPlayer.name)}</td>
+              <td class="px-2">
+                {getPlayerGamesPlayed(player.NBAPlayer.name)}
+              </td>
+              <td class="px-2">{getPlayerPPG(player.NBAPlayer.name)}</td>
+            </tr>
+          ))
+      }
+    </tbody>
+  </table>
+</Layout>

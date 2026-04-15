@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets'
+import nick from '../images/nick.png'
+import david from '../images/david.png'
+import moore from '../images/moore.png'
+---
+
+<h2 class="text-2xl font-bold py-3">Last Year's Podium</h2>
+
+<h3 class="text-xl font-bold py-2">1st Place 🥇</h3>
+<Image src={nick} alt="nick" width={420} />
+
+<h3 class="text-xl font-bold py-2">2nd Place 🥈</h3>
+<Image src={david} alt="david" width={420} />
+
+<h3 class="text-xl font-bold py-2">3rd Place 🥉</h3>
+<Image src={moore} alt="moore" width={420} />
