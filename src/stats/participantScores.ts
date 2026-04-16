@@ -3,7 +3,7 @@ import {
   eq,
   and,
   isNotNull,
-  notInArray,
+  inArray,
   sum,
   count,
   ne,
@@ -33,13 +33,15 @@ export default async function getParticipantScores() {
 
   let remainingPlayersByParticipant: Record<string, number> = {}
 
-  if (eliminatedTeams.length === 0) {
-    // If no eliminated teams yet, all participants have 8 players remaining
-    participants.forEach((participant) => {
-      remainingPlayersByParticipant[participant.name] = 8
-    })
-  } else {
-    const remainingPlayers = await db
+  // Initialize all participants to 8 (full roster)
+  participants.forEach((participant) => {
+    remainingPlayersByParticipant[participant.name] = 8
+  })
+
+  if (eliminatedTeams.length > 0) {
+    // Count how many of each participant's players are on eliminated teams
+    // (players on eliminated teams are guaranteed to be in the DB since they've played)
+    const eliminatedPlayers = await db
       .select()
       .from(NBAPlayer)
       .innerJoin(NBATeam, eq(NBATeam.id, NBAPlayer.teamId))
@@ -47,19 +49,14 @@ export default async function getParticipantScores() {
       .where(
         and(
           isNotNull(NBAPlayer.participantId),
-          notInArray(NBATeam.shortName, eliminatedTeams),
+          inArray(NBATeam.shortName, eliminatedTeams),
         ),
       )
 
-    remainingPlayersByParticipant = remainingPlayers.reduce<
-      Record<string, number>
-    >((acc, player) => {
-      if (!acc[player.Participant.name]) {
-        acc[player.Participant.name] = 0
-      }
-      acc[player.Participant.name]++
-      return acc
-    }, {})
+    for (const player of eliminatedPlayers) {
+      remainingPlayersByParticipant[player.Participant.name] =
+        (remainingPlayersByParticipant[player.Participant.name] ?? 8) - 1
+    }
   }
 
   return participantScores.map((score) => ({
