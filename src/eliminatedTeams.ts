@@ -1,4 +1,6 @@
 // Hardcoded list of eliminated teams (will be updated as playoffs progress)
-const eliminatedTeams: string[] = []
+const eliminatedTeams: string[] = [
+  'LAC',
+]
 
 export default eliminatedTeams
