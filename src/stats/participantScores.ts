@@ -12,7 +12,6 @@ import {
   NBATeam,
   Participant,
 } from 'astro:db'
-import { SQL } from 'drizzle-orm'
 import eliminatedTeams from '../eliminatedTeams'
 import { type Matchup, getMatchupGameIds } from './matchupUtils'
 
@@ -21,7 +20,7 @@ export default async function getParticipantScores(matchups?: Matchup[]) {
   const participants = await db.select().from(Participant)
 
   // Build where conditions — always exclude DNP rows, optionally restrict to specific games
-  const whereConditions: SQL[] = [ne(NBAPlayerGameStats.minutes, 0)]
+  const whereConditions = [ne(NBAPlayerGameStats.minutes, 0)]
 
   if (matchups && matchups.length > 0) {
     const gameIds = await getMatchupGameIds(matchups)
