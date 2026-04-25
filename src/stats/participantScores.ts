@@ -24,7 +24,9 @@ export default async function getParticipantScores(matchups?: Matchup[]) {
 
   if (matchups && matchups.length > 0) {
     const gameIds = await getMatchupGameIds(matchups)
-    whereConditions.push(inArray(NBAPlayerGameStats.gameId, gameIds))
+    if (gameIds.length > 0) {
+      whereConditions.push(inArray(NBAPlayerGameStats.gameId, gameIds))
+    }
   }
 
   // Compute the participant scores (total player points and total games played)

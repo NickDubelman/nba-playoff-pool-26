@@ -24,6 +24,7 @@ export default async function getGameStats(matchups?: Matchup[]) {
   let stats
   if (matchups && matchups.length > 0) {
     const gameIds = await getMatchupGameIds(matchups)
+    if (gameIds.length === 0) return []
     stats = await baseQuery.where(inArray(NBAPlayerGameStats.gameId, gameIds))
   } else {
     stats = await baseQuery
