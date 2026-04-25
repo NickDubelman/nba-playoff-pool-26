@@ -1,5 +1,7 @@
-<script>
-  let { gameStats } = $props()
+<script lang="ts">
+  import type { GameStat } from '../stats/gameStats'
+
+  let { gameStats, title }: { gameStats: GameStat[]; title: string } = $props()
 
   let numPlayers = $state(8)
 
@@ -35,7 +37,7 @@
   })
 </script>
 
-<h2 class="text-2xl font-bold py-3">Top Scorers Overall</h2>
+<h2 class="text-2xl font-bold py-3">{title}</h2>
 
 <div class="num-players-selector">
   <input type="range" min="3" max="81" bind:value={numPlayers} />

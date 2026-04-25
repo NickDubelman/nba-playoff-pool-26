@@ -13,10 +13,21 @@ import {
   Participant,
 } from 'astro:db'
 import eliminatedTeams from '../eliminatedTeams'
+import { type Matchup, getMatchupGameIds } from './matchupUtils'
 
-export default async function getParticipantScores() {
+export default async function getParticipantScores(matchups?: Matchup[]) {
   // Get all participants
   const participants = await db.select().from(Participant)
+
+  // Build where conditions — always exclude DNP rows, optionally restrict to specific games
+  const whereConditions = [ne(NBAPlayerGameStats.minutes, 0)]
+
+  if (matchups && matchups.length > 0) {
+    const gameIds = await getMatchupGameIds(matchups)
+    if (gameIds.length > 0) {
+      whereConditions.push(inArray(NBAPlayerGameStats.gameId, gameIds))
+    }
+  }
 
   // Compute the participant scores (total player points and total games played)
   const participantScores = await db
@@ -28,7 +39,7 @@ export default async function getParticipantScores() {
     .from(Participant)
     .innerJoin(NBAPlayer, eq(NBAPlayer.participantId, Participant.id))
     .leftJoin(NBAPlayerGameStats, eq(NBAPlayerGameStats.playerId, NBAPlayer.id))
-    .where(ne(NBAPlayerGameStats.minutes, 0))
+    .where(and(...whereConditions))
     .groupBy(Participant.id)
 
   let remainingPlayersByParticipant: Record<string, number> = {}

@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Leaderboard from '../components/Leaderboard.svelte'
+import ScoringBreakdown from '../components/ScoringBreakdown/index.svelte'
+import TopScorers from '../components/TopScorers.svelte'
+import { getParticipants } from '../participants'
+import getParticipantScores from '../stats/participantScores'
+import getGameStats from '../stats/gameStats'
+import type { Matchup } from '../stats/matchupUtils'
+
+const round1Matchups: Matchup[] = [
+  ['TOR', 'CLE'],
+  ['MIN', 'DEN'],
+  ['ATL', 'NYK'],
+  ['HOU', 'LAL'],
+  ['PHI', 'BOS'],
+  ['PHX', 'OKC'],
+  ['ORL', 'DET'],
+  ['POR', 'SAS'],
+]
+
+const participants = await getParticipants()
+const participantScores = await getParticipantScores(round1Matchups)
+const gameStats = await getGameStats(round1Matchups)
+---
+
+<Layout title="Round 1 — Scoring Pool">
+  <p>
+    These stats should update every 10 minutes or so. You need to refresh your
+    page for the stats to update.
+  </p>
+
+  <Leaderboard participantScores={participantScores} />
+
+  <ScoringBreakdown
+    client:only="svelte"
+    participants={participants}
+    gameStats={gameStats}
+  />
+
+  <TopScorers client:load gameStats={gameStats} title="Top Scorers in Round 1" />
+</Layout>
