@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro'
 import Leaderboard from '../components/Leaderboard.svelte'
 import TodaysTopPerformers from '../components/TodaysTopPerformers.svelte'
 import ScoringBreakdown from '../components/ScoringBreakdown/index.svelte'
-import TopScorersOverall from '../components/TopScorersOverall.svelte'
+import TopScorers from '../components/TopScorers.svelte'
 import TeamBreakdown from '../components/TeamBreakdown.svelte'
 import DraftAnalysis from '../components/DraftAnalysis.svelte'
 import LastYearsPodium from '../components/LastYearsPodium.astro'
@@ -32,7 +32,7 @@ const gameStats = await getGameStats()
     gameStats={gameStats}
   />
 
-  <TopScorersOverall client:load gameStats={gameStats} />
+  <TopScorers client:load gameStats={gameStats} title="Top Scorers Overall" />
 
   <TeamBreakdown
     client:load
