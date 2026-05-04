@@ -8,35 +8,56 @@ import getParticipantScores from '../stats/participantScores'
 import getGameStats from '../stats/gameStats'
 import type { Matchup } from '../stats/matchupUtils'
 
-const round2Matchups: Matchup[] = []
+const round2Matchups: Matchup[] = [
+  ['OKC', 'LAL'],
+  ['SAS', 'MIN'],
+  ['DET', 'CLE'],
+  ['NYK', 'PHI'],
+]
 const hasData = round2Matchups.length > 0
 
 const participants = hasData ? await getParticipants() : []
-const participantScores = hasData ? await getParticipantScores(round2Matchups) : []
+const participantScores = hasData
+  ? await getParticipantScores(round2Matchups)
+  : []
 const gameStats = hasData ? await getGameStats(round2Matchups) : []
 ---
 
 <Layout title="Round 2 — Scoring Pool">
-  {hasData && (
-    <p>
-      These stats should update every 10 minutes or so. You need to refresh your
-      page for the stats to update.
-    </p>
-  )}
+  {
+    hasData && (
+      <p>
+        These stats should update every 10 minutes or so. You need to refresh
+        your page for the stats to update.
+      </p>
+    )
+  }
 
   {hasData && <Leaderboard participantScores={participantScores} />}
 
-  {hasData && (
-    <ScoringBreakdown
-      client:only="svelte"
-      participants={participants}
-      gameStats={gameStats}
-    />
-  )}
+  {
+    hasData && (
+      <ScoringBreakdown
+        client:only="svelte"
+        participants={participants}
+        gameStats={gameStats}
+      />
+    )
+  }
 
-  {hasData && (
-    <TopScorers client:load gameStats={gameStats} title="Top Scorers in Round 2" />
-  )}
+  {
+    hasData && (
+      <TopScorers
+        client:load
+        gameStats={gameStats}
+        title="Top Scorers in Round 2"
+      />
+    )
+  }
 
-  {!hasData && <h2 class="text-2xl font-bold py-3">Round 2 has not started yet</h2>}
+  {
+    !hasData && (
+      <h2 class="text-2xl font-bold py-3">Round 2 has not started yet</h2>
+    )
+  }
 </Layout>
