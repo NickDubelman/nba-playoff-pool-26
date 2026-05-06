@@ -109,36 +109,38 @@
   <span>showing top {numPlayers}</span>
 </div>
 
-<table class="min-w-full divide-y divide-gray-300 text-sm">
-  <thead>
-    <tr class="font-semibold divide-x">
-      <th class="py-2 text-left">Player</th>
-      <th class="px-2 text-left">Picked by</th>
-      <th class="px-2 text-left">Points</th>
-      <th class="px-2 text-left">Drafted</th>
-      <th class="px-2 text-left">Rank</th>
-      <th class="px-2 text-left">Net</th>
-    </tr>
-  </thead>
-
-  <tbody class="divide-y divide-gray-200">
-    {#each sortedPicksSlice as { player, points, active, pickedBy, drafted, rank, net }}
-      <tr class="divide-x">
-        <td class="py-2">
-          {player}
-          {#if !active}
-            <span>❌</span>
-          {/if}
-        </td>
-        <td class="px-2">{pickedBy}</td>
-        <td class="px-2">{points}</td>
-        <td class="px-2">{drafted}</td>
-        <td class="px-2">{rank}</td>
-        <td class="px-2" style="background: {netColor(net)}">{net}</td>
+<div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-300 text-sm">
+    <thead>
+      <tr class="font-semibold divide-x">
+        <th class="py-2 text-left">Player</th>
+        <th class="px-2 text-left">Picked by</th>
+        <th class="px-2 text-left">Points</th>
+        <th class="px-2 text-left">Drafted</th>
+        <th class="px-2 text-left">Rank</th>
+        <th class="px-2 text-left">Net</th>
       </tr>
-    {/each}
-  </tbody>
-</table>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      {#each sortedPicksSlice as { player, points, active, pickedBy, drafted, rank, net }}
+        <tr class="divide-x">
+          <td class="py-2">
+            {player}
+            {#if !active}
+              <span>❌</span>
+            {/if}
+          </td>
+          <td class="px-2">{pickedBy}</td>
+          <td class="px-2">{points}</td>
+          <td class="px-2">{drafted}</td>
+          <td class="px-2">{rank}</td>
+          <td class="px-2" style="background: {netColor(net)}">{net}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
 
 <style>
   .num-players-selector {
