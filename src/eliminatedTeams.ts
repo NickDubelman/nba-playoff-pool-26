@@ -17,6 +17,7 @@ const eliminatedTeams: string[] = [
   'MIN',
   'DET',
   'CLE',
+  'OKC',
 ]
 
 export default eliminatedTeams
