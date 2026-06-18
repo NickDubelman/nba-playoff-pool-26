@@ -1,2 +1,4 @@
-[functions."scheduledPull"]
-schedule = "*/2 * * * *"
+# Scheduled stats sync — disabled after the 2026 playoffs ended (2026-06-18).
+# Re-enable for next year's playoffs by uncommenting the two lines below.
+# [functions."scheduledPull"]
+# schedule = "*/2 * * * *"
